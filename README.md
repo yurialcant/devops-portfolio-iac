@@ -53,12 +53,10 @@ Este guia o ajudará a configurar o ambiente para explorar os projetos neste rep
     Abra seu terminal (no VS Code, você pode usar o terminal integrado) e execute os seguintes comandos:
 
     ```bash
-    git clone [https://github.com/](https://github.com/)<seu-usuario>/devops-portfolio-iac.git
+    git clone https://github.com/yurialcant/devops-portfolio-iac.git
     cd devops-portfolio-iac
     ```
-
-    **Observação:** Substitua `<seu-usuario>` pelo seu nome de usuário do GitHub.
-
+    
 3.  **Navegar para o Projeto 1 (IaC com Terraform)**:
     Para começar a explorar o primeiro projeto, navegue até o diretório `project-1-iac`:
 
