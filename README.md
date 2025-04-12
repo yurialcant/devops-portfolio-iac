@@ -12,30 +12,30 @@ Bem-vindo(a) ao meu portfólio de projetos de Infraestrutura e Automação! Este
 ## Estrutura de Pastas
 
 devops-portfolio-iac/
-├── README.md           <- Este arquivo, ponto de entrada do repositório.
-├── .gitignore          <- Especifica arquivos e diretórios que o Git deve ignorar.
-├── docs/               <- Contém diagramas de arquitetura e documentação adicional.
+├── README.md
+├── .gitignore
+├── docs/
 │   └── architecture.png
-├── app/                <- Contém o código fonte da aplicação Flask.
+├── app/
 │   └── flask_hello/
-│       ├── app.py          <- Código principal da aplicação Flask "Hello, Terraform!".
-│       └── requirements.txt <- Lista de dependências Python para a aplicação Flask.
-├── project-1-iac/      <- Contém a configuração de Infraestrutura como Código (IaC) usando Terraform.
-│   ├── backend.tf        <- Configuração do backend do Terraform (onde o estado será armazenado).
-│   ├── main.tf           <- Definição dos recursos principais da infraestrutura.
-│   ├── variables.tf      <- Definição das variáveis utilizadas na configuração do Terraform.
-│   ├── outputs.tf        <- Definição das saídas (outputs) do Terraform.
-│   ├── terraform.tfvars.example <- Exemplo de arquivo de variáveis do Terraform.
-│   └── modules/          <- Contém módulos reutilizáveis do Terraform.
-│       ├── network/      <- Módulo para configuração da rede (VPC, subnets, etc.).
-│       │   ├── main.tf
-│       │   ├── variables.tf
-│       │   └── outputs.tf
-│       └── compute/      <- Módulo para configuração de recursos de computação (EC2, etc.).
-│           ├── main.tf
-│           ├── variables.tf
-│           ├── outputs.tf
-│           └── user_data.sh  <- Script de inicialização para instâncias (exemplo).
+│       ├── app.py
+│       └── requirements.txt
+└── project-1-iac/
+├── backend.tf
+├── main.tf
+├── variables.tf
+├── outputs.tf
+├── terraform.tfvars.example
+└── modules/
+├── network/
+│   ├── main.tf
+│   ├── variables.tf
+│   └── outputs.tf
+└── compute/
+├── main.tf
+├── variables.tf
+├── outputs.tf
+└── user_data.sh
 ├── project-2-ci-cd/     <- (Futuro) Conterá a configuração do pipeline de CI/CD.
 ├── project-3-k8s/       <- (Futuro) Conterá os manifests e configurações do Kubernetes.
 └── project-4-devsecops/ <- (Futuro) Conterá as configurações e scripts para DevSecOps.
