@@ -11,7 +11,7 @@ Bem-vindo(a) ao meu portfólio de projetos de Infraestrutura e Automação! Este
 
 ## Estrutura de Pastas
 
-devops-portfolio/
+devops-portfolio-iac/
 ├── README.md           - Ponto de entrada do repositório
 ├── .gitignore          - Arquivos ignorados pelo Git
 ├── docs/               - Diagramas e documentação
@@ -53,8 +53,8 @@ Este guia o ajudará a configurar o ambiente para explorar os projetos neste rep
     Abra seu terminal (no VS Code, você pode usar o terminal integrado) e execute os seguintes comandos:
 
     ```bash
-    git clone [https://github.com/](https://github.com/)<seu-usuario>/devops-portfolio.git
-    cd devops-portfolio
+    git clone [https://github.com/](https://github.com/)<seu-usuario>/devops-portfolio-iac.git
+    cd devops-portfolio-iac
     ```
 
     **Observação:** Substitua `<seu-usuario>` pelo seu nome de usuário do GitHub.
