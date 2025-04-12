@@ -11,34 +11,31 @@ Bem-vindo(a) ao meu portfólio de projetos de Infraestrutura e Automação! Este
 
 ## Estrutura de Pastas
 
-devops-portfolio-iac/
-├── README.md
-├── .gitignore
-├── docs/
-│   └── architecture.png
-├── app/
-│   └── flask_hello/
-│       ├── app.py
-│       └── requirements.txt
-└── project-1-iac/
-├── backend.tf
-├── main.tf
-├── variables.tf
-├── outputs.tf
-├── terraform.tfvars.example
-└── modules/
-├── network/
-│   ├── main.tf
-│   ├── variables.tf
-│   └── outputs.tf
-└── compute/
-├── main.tf
-├── variables.tf
-├── outputs.tf
-└── user_data.sh
-├── project-2-ci-cd/     <- (Futuro) Conterá a configuração do pipeline de CI/CD.
-├── project-3-k8s/       <- (Futuro) Conterá os manifests e configurações do Kubernetes.
-└── project-4-devsecops/ <- (Futuro) Conterá as configurações e scripts para DevSecOps.
+devops-portfolio/
+├── README.md           - Ponto de entrada do repositório
+├── .gitignore          - Arquivos ignorados pelo Git
+├── docs/               - Diagramas e documentação
+│   └── architecture.png - Diagrama de arquitetura
+├── app/                - Código da aplicação Flask
+│   └── flask_hello/    - Subdiretório da aplicação Flask
+│       ├── app.py          - Código principal da Flask
+│       └── requirements.txt - Dependências Python
+└── project-1-iac/      - IaC com Terraform
+    ├── backend.tf        - Configuração do backend do Terraform
+    ├── main.tf           - Recursos principais da infraestrutura
+    ├── variables.tf      - Variáveis do Terraform
+    ├── outputs.tf        - Saídas do Terraform
+    ├── terraform.tfvars.example - Exemplo de variáveis
+    └── modules/          - Módulos Terraform reutilizáveis
+        ├── network/      - Módulo de rede
+        │   ├── main.tf
+        │   ├── variables.tf
+        │   └── outputs.tf
+        └── compute/      - Módulo de computação
+            ├── main.tf
+            ├── variables.tf
+            ├── outputs.tf
+            └── user_data.sh  - Script de inicialização
 
 ---
 
