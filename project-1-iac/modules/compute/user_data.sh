@@ -1,36 +1,39 @@
 #!/bin/bash
-
-# 🛠️ Ativa depuração e falha imediata em erros
 set -e
 set -x
 
-echo "🔧 Iniciando execução do user_data.sh..."
+echo "🔧 Iniciando configuração da instância EC2..."
 
-# Atualiza pacotes
+# Atualiza os pacotes
 sudo apt-get update -y
-
-# Instala Python e pip
 sudo apt-get install -y python3-pip
 
-# Instala o Flask apenas para o usuário atual (evita problemas de permissão no GitHub Actions)
+# Instala Flask
 pip3 install --user flask
 
-# Cria diretório da aplicação no workspace atual (evita /home/ubuntu que exige root)
-APP_DIR="${PWD}/app"
+# Define diretório da aplicação
+APP_DIR="/home/ubuntu/app"
 mkdir -p "$APP_DIR"
 
-# Cria um app Flask de exemplo
-cat <<EOF > "$APP_DIR/app.py"
+# Cria aplicação Flask simples
+cat > "$APP_DIR/app.py" <<EOF
 from flask import Flask
 app = Flask(__name__)
 
-@app.route('/')
+@app.route("/")
 def hello():
-    return "Hello, World from Flask!"
+    return "👋 Olá! Esta aplicação Flask está rodando na EC2 com sucesso!"
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=80)
 EOF
 
+# Redireciona logs para arquivo
+LOG_FILE="$APP_DIR/flask.log"
+
+# Inicia a aplicação Flask com nohup
+nohup python3 "$APP_DIR/app.py" > "$LOG_FILE" 2>&1 &
+
 echo "✅ Script finalizado com sucesso!"
+
 
