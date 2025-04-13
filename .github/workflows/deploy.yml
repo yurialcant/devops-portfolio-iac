@@ -16,15 +16,7 @@ jobs:
       - name: Tornar o script executável
         run: chmod +x project-1-iac/modules/compute/user_data.sh
 
-      - name: Adicionar debug ao script
-        run: |
-          echo '#!/bin/bash' > wrapped_user_data.sh
-          echo 'set -e' >> wrapped_user_data.sh
-          echo 'set -x' >> wrapped_user_data.sh
-          echo 'echo "🔧 Iniciando execução do user_data.sh..."' >> wrapped_user_data.sh
-          cat project-1-iac/modules/compute/user_data.sh >> wrapped_user_data.sh
-          chmod +x wrapped_user_data.sh
-
       - name: Executar o script com debug
-        run: ./wrapped_user_data.sh
+        run: project-1-iac/modules/compute/user_data.sh
+
 
