@@ -8,4 +8,4 @@ __pycache__/
 *.py[cod]
 .venv/
 
-/project-1-iac/backend.tf
+project-1-iac/backend.tf
