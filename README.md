@@ -11,30 +11,30 @@ Bem-vindo(a) ao meu portfólio de projetos de Infraestrutura e Automação! Este
 
 ## Estrutura de Pastas
 
-devops-portfolio-iac/
-├── README.md           - Ponto de entrada do repositório
-├── .gitignore          - Arquivos ignorados pelo Git
-├── docs/               - Diagramas e documentação
-│   └── architecture.png - Diagrama de arquitetura
-├── app/                - Código da aplicação Flask
-│   └── flask_hello/    - Subdiretório da aplicação Flask
-│       ├── app.py          - Código principal da Flask
-│       └── requirements.txt - Dependências Python
-└── project-1-iac/      - IaC com Terraform
-    ├── backend.tf        - Configuração do backend do Terraform
-    ├── main.tf           - Recursos principais da infraestrutura
-    ├── variables.tf      - Variáveis do Terraform
-    ├── outputs.tf        - Saídas do Terraform
-    ├── terraform.tfvars.example - Exemplo de variáveis
-    └── modules/          - Módulos Terraform reutilizáveis
-        ├── network/      - Módulo de rede
-        │   ├── main.tf
-        │   ├── variables.tf
-        │   └── outputs.tf
-        └── compute/      - Módulo de computação
-            ├── main.tf
-            ├── variables.tf
-            ├── outputs.tf
+devops-portfolio-iac/  
+├── README.md           - Ponto de entrada do repositório  
+├── .gitignore          - Arquivos ignorados pelo Git  
+├── docs/               - Diagramas e documentação  
+│   └── architecture.png - Diagrama de arquitetura  
+├── app/                - Código da aplicação Flask  
+│   └── flask_hello/    - Subdiretório da aplicação Flask  
+│       ├── app.py          - Código principal da Flask  
+│       └── requirements.txt - Dependências Python  
+└── project-1-iac/      - IaC com Terraform  
+    ├── backend.tf        - Configuração do backend do Terraform  
+    ├── main.tf           - Recursos principais da infraestrutura  
+    ├── variables.tf      - Variáveis do Terraform  
+    ├── outputs.tf        - Saídas do Terraform  
+    ├── terraform.tfvars.example - Exemplo de variáveis  
+    └── modules/          - Módulos Terraform reutilizáveis  
+        ├── network/      - Módulo de rede  
+        │   ├── main.tf  
+        │   ├── variables.tf  
+        │   └── outputs.tf  
+        └── compute/      - Módulo de computação  
+            ├── main.tf  
+            ├── variables.tf  
+            ├── outputs.tf  
             └── user_data.sh  - Script de inicialização
 
 ---
@@ -50,57 +50,66 @@ Este guia o ajudará a configurar o ambiente para explorar os projetos neste rep
     * **Python 3.8+**: Necessário para executar a aplicação Flask no Projeto 1. Você pode baixá-lo em [https://www.python.org/downloads/](https://www.python.org/downloads/).
 
 2.  **Clonar o repositório e entrar no diretório do projeto**:
-    Abra seu terminal (no VS Code, você pode usar o terminal integrado) e execute os seguintes comandos:
-
     ```bash
     git clone https://github.com/yurialcant/devops-portfolio-iac.git
     cd devops-portfolio-iac
     ```
     
 3.  **Navegar para o Projeto 1 (IaC com Terraform)**:
-    Para começar a explorar o primeiro projeto, navegue até o diretório `project-1-iac`:
-
     ```bash
     cd project-1-iac
     ```
 
 4.  **Inicializar o Terraform**:
-    Antes de provisionar a infraestrutura, você precisa inicializar o Terraform:
-
     ```bash
     terraform init
     ```
 
-    Este comando baixa os plugins necessários (provider AWS, neste caso) e configura o backend.
-
 5.  **Revisar a configuração do Terraform**:
-    Examine os arquivos `.tf` (principalmente `main.tf`, `variables.tf` e `outputs.tf`) para entender a infraestrutura que será provisionada. Consulte também o arquivo `terraform.tfvars.example` para ver um exemplo de como fornecer valores para as variáveis.
+    Examine os arquivos `.tf` (principalmente `main.tf`, `variables.tf` e `outputs.tf`) para entender a infraestrutura que será provisionada. Consulte também o arquivo `terraform.tfvars.example`.
 
 6.  **Aplicar a configuração do Terraform**:
-    Para criar a infraestrutura na AWS, execute o seguinte comando:
-
     ```bash
     terraform apply -auto-approve
     ```
 
-    **Aviso:** O comando `-auto-approve` aplicará as mudanças sem pedir confirmação. Em um ambiente de produção, é altamente recomendável remover essa flag e revisar o plano de execução com `terraform plan` antes de aplicar.
-
 7.  **Acessar a aplicação Flask**:
-    Após a conclusão do `terraform apply`, as saídas (definidas no `outputs.tf`) mostrarão informações importantes, como o endereço IP público da instância EC2 onde a aplicação Flask estará rodando. Acesse esse endereço no seu navegador para ver a mensagem "Hello, Terraform!".
+    Após a conclusão do `terraform apply`, veja a saída com o IP da EC2.
 
 8.  **Limpar a infraestrutura (Importante)**:
-    Para evitar custos desnecessários na AWS, após explorar o projeto, destrua a infraestrutura provisionada pelo Terraform:
-
     ```bash
     terraform destroy -auto-approve
     ```
 
-    Novamente, tenha cuidado com a flag `-auto-approve` em ambientes de produção.
-
-## Próximos Passos
-
-Este é um ponto de partida! Os outros projetos (`project-2-ci-cd`, `project-3-k8s`, `project-4-devsecops`) serão desenvolvidos e implementados em commits futuros. Fique de olho nas atualizações!
-
-Sinta-se à vontade para explorar o código, fornecer feedback e contribuir para este portfólio.
-
 ---
+
+## 📦 Configuração do Backend Remoto
+
+Este projeto utiliza um backend remoto no **S3** com bloqueio de estado via **DynamoDB**.
+
+### 🔗 Backend
+- **Bucket S3**: `terraform-state-devops`  
+- **Path do estado**: `project-1/terraform.tfstate`  
+- **Região AWS**: `us-east-1`
+
+### 🔒 Locking
+- **Tabela DynamoDB**: `terraform-lock-table`  
+- **Chave primária (partition key)**: `LockID` (tipo: string)
+
+### 🛡️ Políticas de acesso (recomendadas)
+
+#### Permissões no S3:
+```json
+{
+  "Effect": "Allow",
+  "Action": [
+    "s3:GetObject",
+    "s3:PutObject",
+    "s3:DeleteObject",
+    "s3:ListBucket"
+  ],
+  "Resource": [
+    "arn:aws:s3:::terraform-state-devops",
+    "arn:aws:s3:::terraform-state-devops/*"
+  ]
+}
