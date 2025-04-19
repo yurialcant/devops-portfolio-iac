@@ -13,3 +13,24 @@ variable "availability_zone" {
 variable "vpc_name" {
   default = "flask-vpc"
 }
+
+variable "ami_id" {
+  description = "AMI ID para a instância EC2"
+  type        = string
+}
+
+variable "instance_type" {
+  default     = "t2.micro"
+  description = "Tipo da instância EC2"
+}
+
+variable "key_name" {
+  description = "Nome da chave SSH"
+  type        = string
+}
+
+variable "instance_name" {
+  default     = "flask-instance"
+  description = "Nome da instância EC2"
+}
+
