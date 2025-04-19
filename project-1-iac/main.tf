@@ -13,17 +13,20 @@ provider "aws" {
   region = "us-east-1"
 }
 
-# Módulo de Rede (Network)
+
 
 module "network" {
-  source              = "./modules/network"
-  vpc_cidr            = var.vpc_cidr
-  public_subnet_cidr  = var.public_subnet_cidr
-  availability_zone   = var.availability_zone
-  vpc_name            = var.vpc_name
+  source   = "./modules/network"
+  vpc_cidr = var.vpc_cidr
+  vpc_name = var.vpc_name
+  region   = var.region
+
+  public_subnet_cidr_az1 = var.public_subnet_cidr_az1
+  public_subnet_cidr_az2 = var.public_subnet_cidr_az2
+
 }
 
-# Módulo de Computação (Compute)
+
 module "compute" {
   source = "./modules/compute"
 
@@ -36,8 +39,35 @@ module "compute" {
   security_group_ids = module.network.security_group_ids
 
   tags = {
-    Name      = var.instance_name
-    Ambiente  = "dev"
+    Name     = var.instance_name
+    Ambiente = "dev"
   }
 }
 
+module "loadbalancer" {
+  source = "./modules/loadbalancer"
+
+  name               = var.project_name
+  security_group_ids = [module.network.alb_security_group_id]
+  public_subnet_ids  = module.network.public_subnet_ids
+  vpc_id             = module.network.vpc_id
+
+  instance_id   = module.compute.instance_id
+  instance_port = 80
+
+  target_group_port     = 80
+  target_group_protocol = "HTTP"
+  health_check_path     = "/"
+
+  http_listener_port = 80
+
+  # Configuração HTTPS (opcional)
+  # https_listener_port = 443
+  # ssl_policy        = "ELBSecurityPolicy-2016-08"
+  # certificate_arn   = "arn:aws:acm:us-east-1:123456789012:certificate/your-certificate-id"
+}
+
+output "alb_dns" {
+  value       = module.loadbalancer.lb_dns_name
+  description = "DNS do Application Load Balancer"
+}

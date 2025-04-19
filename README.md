@@ -9,107 +9,109 @@ Bem-vindo(a) ao meu portfólio de projetos de Infraestrutura e Automação! Este
 
 ---
 
-## Estrutura de Pastas
+# Projeto 1 – IaC: Provisionamento Completo de um Ambiente Flask "Hello, Terraform!" na AWS
 
-devops-portfolio-iac/  
-├── README.md           - Ponto de entrada do repositório  
-├── .gitignore          - Arquivos ignorados pelo Git  
-├── docs/               - Diagramas e documentação  
-│   └── architecture.png - Diagrama de arquitetura  
-├── app/                - Código da aplicação Flask  
-│   └── flask_hello/    - Subdiretório da aplicação Flask  
-│       ├── app.py          - Código principal da Flask  
-│       └── requirements.txt - Dependências Python  
-└── project-1-iac/      - IaC com Terraform  
-    ├── backend.tf        - Configuração do backend do Terraform  
-    ├── main.tf           - Recursos principais da infraestrutura  
-    ├── variables.tf      - Variáveis do Terraform  
-    ├── outputs.tf        - Saídas do Terraform  
-    ├── terraform.tfvars.example - Exemplo de variáveis  
-    └── modules/          - Módulos Terraform reutilizáveis  
-        ├── network/      - Módulo de rede  
-        │   ├── main.tf  
-        │   ├── variables.tf  
-        │   └── outputs.tf  
-        └── compute/      - Módulo de computação  
-            ├── main.tf  
-            ├── variables.tf  
-            ├── outputs.tf  
-            └── user_data.sh  - Script de inicialização
+## Visão Geral
 
----
+Este projeto demonstra a criação e o provisionamento completo de um ambiente para executar uma simples aplicação Flask "Hello, Terraform!" na AWS utilizando a ferramenta de Infraestrutura como Código (IaC) Terraform. O objetivo é automatizar a configuração da infraestrutura necessária, incluindo uma Virtual Private Cloud (VPC), subnets públicas, um Internet Gateway, uma instância EC2 e um Application Load Balancer (ALB) para tornar a aplicação acessível.
 
-## Como Começar
+## Arquitetura
 
-Este guia o ajudará a configurar o ambiente para explorar os projetos neste repositório.
+A arquitetura do projeto é a seguinte:
 
-1.  **Pré-requisitos**:
-    * **Git**: Necessário para clonar o repositório. Você pode baixá-lo em [https://git-scm.com/downloads](https://git-scm.com/downloads).
-    * **Terraform**: Utilizado para provisionar a infraestrutura no Projeto 1. Certifique-se de ter a versão mais recente instalada seguindo as instruções em [https://www.terraform.io/downloads](https://www.terraform.io/downloads).
-    * **AWS CLI**: A Interface de Linha de Comando da AWS é necessária para interagir com a AWS e será utilizada pelo Terraform no Projeto 1. Siga as instruções de instalação em [https://aws.amazon.com/cli/](https://aws.amazon.com/cli/). **Certifique-se de ter configurado suas credenciais da AWS corretamente usando `aws configure` ou outras formas de autenticação (como funções IAM, se aplicável).**
-    * **Python 3.8+**: Necessário para executar a aplicação Flask no Projeto 1. Você pode baixá-lo em [https://www.python.org/downloads/](https://www.python.org/downloads/).
+![Arquitetura do Projeto 1](docs/Development us-east-1.png)
 
-2.  **Clonar o repositório e entrar no diretório do projeto**:
+## Pré-requisitos
+
+Antes de começar, você precisará ter o seguinte instalado e configurado:
+
+* **AWS CLI:** A Interface de Linha de Comando da AWS ([https://aws.amazon.com/cli/](https://aws.amazon.com/cli/)) configurada com suas credenciais da AWS. Certifique-se de ter as permissões necessárias para criar os recursos descritos.
+* **Terraform:** A ferramenta de IaC Terraform ([https://www.terraform.io/downloads](https://www.terraform.io/downloads)) instalada no seu sistema.
+* **Python e Pip:** Necessários para executar a aplicação Flask na instância EC2.
+* **Chave SSH:** Um par de chaves SSH da AWS configurado na região `us-east-1`. Você precisará do nome da chave para configurar a instância EC2.
+* **Backend Remoto Terraform:** Um bucket S3 e uma tabela DynamoDB configurados na sua conta AWS para armazenar o estado do Terraform remotamente.
+
+## Como Executar o Projeto
+
+Siga estes passos para provisionar e executar o ambiente Flask:
+
+1.  **Clonar o Repositório (se aplicável):**
     ```bash
-    git clone https://github.com/yurialcant/devops-portfolio-iac.git
-    cd devops-portfolio-iac
-    ```
-    
-3.  **Navegar para o Projeto 1 (IaC com Terraform)**:
-    ```bash
-    cd project-1-iac
+    git clone seu_repositorio.git
+    cd projeto1-iac
     ```
 
-4.  **Inicializar o Terraform**:
+2.  **Configurar o Backend Remoto do Terraform:**
+    Crie um arquivo `terraform.tf` (se ainda não existir) na raiz do seu projeto com a seguinte configuração, substituindo os placeholders com seus valores reais:
+
+    ```terraform
+    terraform {
+      backend "s3" {
+        bucket = "nome do bucket"
+        key    = "projeto1/terraform.tfstate"
+        region = "us-east-1"
+        dynamodb_table = "o nome da tabela que você criou"
+      }
+    }
+    ```
+
+3.  **Inicializar o Terraform:**
+    Navegue até o diretório raiz do seu projeto Terraform no terminal e execute:
     ```bash
     terraform init
     ```
+    Este comando inicializa o diretório de trabalho do Terraform, baixa os providers necessários (AWS) e configura o backend remoto.
 
-5.  **Revisar a configuração do Terraform**:
-    Examine os arquivos `.tf` (principalmente `main.tf`, `variables.tf` e `outputs.tf`) para entender a infraestrutura que será provisionada. Consulte também o arquivo `terraform.tfvars.example`.
+4.  **Definir as Variáveis:**
+    Você precisará fornecer valores para as variáveis definidas nos seus arquivos `.tfvars` ou interativamente. Crie um arquivo `terraform.tfvars` na raiz do seu projeto (recomendado) e preencha com os valores apropriados:
 
-6.  **Aplicar a configuração do Terraform**:
+    ```terraform
+    vpc_cidr            = "10.0.0.0/16"
+    public_subnet_cidr_az1 = "10.0.1.0/24"
+    public_subnet_cidr_az2 = "10.0.2.0/24"
+    availability_zone   = "us-east-1a" # Usado para a instância EC2
+    region              = "us-east-1"
+    vpc_name            = "flask-app-vpc"
+    ami_id              = "ami-XXXXXXXXXXXXXXX" # Substitua pela AMI ID desejada na região us-east-1, neste projeto usamos o ubuntu
+    instance_type       = "t2.micro"
+    key_name            = "sua-chave-ssh" # Substitua pelo nome da sua chave SSH
+    instance_name       = "flask-app-instance"
+    project_name        = "flask-app-project"
+    ```
+    
+5.  **Verificar o Plano de Execução:**
+    Execute o seguinte comando para ver as mudanças que o Terraform irá realizar na sua infraestrutura da AWS:
+    ```bash
+    terraform plan
+    ```
+    Revise cuidadosamente o plano para garantir que os recursos a serem criados correspondam às suas expectativas.
+
+6.  **Aplicar a Configuração do Terraform:**
+    Se o plano for satisfatório, execute o seguinte comando para provisionar a infraestrutura na AWS:
     ```bash
     terraform apply -auto-approve
     ```
+    O `-auto-approve` aprova automaticamente a aplicação do plano. Em ambientes de produção, é recomendável remover essa flag para revisar o plano antes da aplicação.
 
-7.  **Acessar a aplicação Flask**:
-    Após a conclusão do `terraform apply`, veja a saída com o IP da EC2.
+7.  **Acessar a Aplicação Flask:**
+    Após a conclusão bem-sucedida do `terraform apply`, o Terraform exibirá os outputs definidos no seu módulo de Load Balancer, incluindo o `lb_dns_name`. Copie esse nome DNS e cole-o no seu navegador web. Você deverá ver a mensagem do nosso código configurado no app.py.
 
-8.  **Limpar a infraestrutura (Importante)**:
+8.  **Acessar a Instância EC2 via SSH (opcional):**
+    Você pode acessar a instância EC2 usando SSH com a chave que você especificou:
     ```bash
-    terraform destroy -auto-approve
+    ssh -i "chave.pem" ec2-user@<ip_publico_da_instancia>
     ```
+    Você pode encontrar o IP público da instância no console da AWS ou nos outputs do Terraform (se você configurou os outputs corretamente).
 
----
+## Limpeza da Infraestrutura
 
-## 📦 Configuração do Backend Remoto
+Para evitar custos contínuos na AWS, é importante destruir os recursos provisionados quando não forem mais necessários. Execute o seguinte comando no diretório raiz do seu projeto Terraform:
 
-Este projeto utiliza um backend remoto no **S3** com bloqueio de estado via **DynamoDB**.
+## Boas Práticas Adotadas
 
-### 🔗 Backend
-- **Bucket S3**: `terraform-state-devops`  
-- **Path do estado**: `project-1/terraform.tfstate`  
-- **Região AWS**: `us-east-1`
-
-### 🔒 Locking
-- **Tabela DynamoDB**: `terraform-lock-table`  
-- **Chave primária (partition key)**: `LockID` (tipo: string)
-
-### 🛡️ Políticas de acesso (recomendadas)
-
-#### Permissões no S3:
-```json
-{
-  "Effect": "Allow",
-  "Action": [
-    "s3:GetObject",
-    "s3:PutObject",
-    "s3:DeleteObject",
-    "s3:ListBucket"
-  ],
-  "Resource": [
-    "arn:aws:s3:::terraform-state-devops",
-    "arn:aws:s3:::terraform-state-devops/*"
-  ]
-}
+**Infraestrutura como Código (IaC)**: Utilização do Terraform para definir e provisionar a infraestrutura de forma automatizada e versionada.
+**Modularidade**: Organização do código Terraform em módulos lógicos (network, compute, loadbalancer) para melhor gerenciamento e reutilização.
+**Backend Remoto**: Configuração de um backend remoto (S3 e DynamoDB) para armazenar o estado do Terraform de forma segura e permitir colaboração.
+**Variáveis**: Utilização de variáveis para tornar a configuração mais flexível e personalizável.
+**Outputs**: Exposição de informações importantes sobre a infraestrutura provisionada (como o DNS do Load Balancer).
+**Segurança Básica**: Implementação de Security Groups para controlar o acesso à instância EC2 (limitando o tráfego de entrada para as portas necessárias).
