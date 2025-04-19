@@ -19,7 +19,7 @@ Este projeto demonstra a criação e o provisionamento completo de um ambiente p
 
 A arquitetura do projeto é a seguinte:
 
-![Arquitetura do Projeto 1](devops-portfolio-iac\docs\Development%20us-east-1.png)
+![Arquitetura do Projeto 1](docs/Development-us-east-1.png)
 
 ## Pré-requisitos
 
