@@ -19,7 +19,7 @@ Este projeto demonstra a criação e o provisionamento completo de um ambiente p
 
 A arquitetura do projeto é a seguinte:
 
-![Arquitetura do Projeto 1](docs/Development us-east-1.png)
+![Arquitetura do Projeto 1](docs/Development%20us-east-1.png)
 
 ## Pré-requisitos
 
@@ -110,8 +110,13 @@ Para evitar custos contínuos na AWS, é importante destruir os recursos provisi
 ## Boas Práticas Adotadas
 
 **Infraestrutura como Código (IaC)**: Utilização do Terraform para definir e provisionar a infraestrutura de forma automatizada e versionada.
+
 **Modularidade**: Organização do código Terraform em módulos lógicos (network, compute, loadbalancer) para melhor gerenciamento e reutilização.
+
 **Backend Remoto**: Configuração de um backend remoto (S3 e DynamoDB) para armazenar o estado do Terraform de forma segura e permitir colaboração.
+
 **Variáveis**: Utilização de variáveis para tornar a configuração mais flexível e personalizável.
+
 **Outputs**: Exposição de informações importantes sobre a infraestrutura provisionada (como o DNS do Load Balancer).
+
 **Segurança Básica**: Implementação de Security Groups para controlar o acesso à instância EC2 (limitando o tráfego de entrada para as portas necessárias).
